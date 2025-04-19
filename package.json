@@ -1,0 +1,70 @@
+{
+    "name": "typing-effect-extension",
+    "displayName": "typing-effect-extension",
+    "description": "Paste text with a typing effect, one character at a time.",
+    "version": "0.0.1",
+    "publisher": "yogastama",
+    "engines": {
+        "vscode": "^1.99.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.pasteWithTypingEffect",
+                "title": "Paste with Typing Effect"
+            },
+            {
+                "command": "extension.cancelTypingEffect",
+                "title": "Cancel Typing Effect"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "extension.pasteWithTypingEffect",
+                "key": "ctrl+shift+v",
+                "mac": "cmd+shift+v",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "extension.cancelTypingEffect",
+                "key": "ctrl+shift+c",
+                "mac": "cmd+shift+c",
+                "when": "editorTextFocus"
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "Typing Effect Extension Settings",
+            "properties": {
+                "typingEffect.pasteShortcut": {
+                    "type": "string",
+                    "default": "ctrl+shift+v",
+                    "description": "Shortcut key for pasting with typing effect"
+                },
+                "typingEffect.cancelShortcut": {
+                    "type": "string",
+                    "default": "ctrl+shift+c",
+                    "description": "Shortcut key for canceling typing effect"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "lint": "eslint .",
+        "pretest": "npm run lint",
+        "test": "vscode-test"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.99.0",
+        "@types/mocha": "^10.0.10",
+        "@types/node": "20.x",
+        "eslint": "^9.23.0",
+        "@vscode/test-cli": "^0.0.10",
+        "@vscode/test-electron": "^2.4.1"
+    }
+}
