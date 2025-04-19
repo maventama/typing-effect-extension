@@ -2,7 +2,7 @@
     "name": "typing-effect-extension",
     "displayName": "typing-effect-extension",
     "description": "Paste text with a typing effect, one character at a time.",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/maventama/typing-effect-extension.git"
@@ -17,6 +17,7 @@
     ],
     "activationEvents": [],
     "main": "./extension.js",
+    "icon": "images/icon.png",
     "contributes": {
         "commands": [
             {
