@@ -3,6 +3,11 @@
     "displayName": "typing-effect-extension",
     "description": "Paste text with a typing effect, one character at a time.",
     "version": "0.0.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/maventama/typing-effect-extension.git"
+    },
+    "license": "MIT",
     "publisher": "yogastama",
     "engines": {
         "vscode": "^1.99.0"
