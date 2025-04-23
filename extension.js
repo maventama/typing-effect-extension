@@ -1,48 +1,80 @@
 const vscode = require('vscode');
 
-let typingInterval = null;  // Tracking interval global untuk cancel
+let cancelTyping = false;
 
 function activate(context) {
-    console.log('Extension "typing-effect-extension" is now active!');
+    console.log('Typing Effect Extension activated');
 
-    let pasteWithTypingDisposable = vscode.commands.registerCommand('extension.pasteWithTypingEffect', () => {
+    const pasteWithTypingDisposable = vscode.commands.registerCommand('extension.pasteWithTypingEffect', () => {
         const editor = vscode.window.activeTextEditor;
-        if (editor) {
-            vscode.env.clipboard.readText().then(content => {
-                const chars = content.split('');  // Pisahkan per huruf
-                console.log('Clipboard Content:', content);  // Debug log
-                console.log('Characters Array:', chars);  // Debug log
+        if (!editor) return;
 
-                let i = 0;
-                typingInterval = setInterval(() => {
-                    if (i >= chars.length) {
-                        clearInterval(typingInterval);
-                        console.log('Typing effect complete!');
-                        return;
-                    }
+        vscode.env.clipboard.readText().then(content => {
+            // Replace 4 spaces with actual tab before split
+            content = content.replace(/ {4}/g, '\t');
 
+            const chars = content.split('');
+            let i = 0;
+            cancelTyping = false;
+
+            function typeChar() {
+                if (cancelTyping || i >= chars.length) {
+                    console.log('Typing done or canceled');
+                    return;
+                }
+
+                const char = chars[i];
+                const isSpace = char === ' ';
+                const isNewline = char === '\n';
+                const isEndOfSentence = ['.', '?', '!'].includes(char);
+                const typoChance = Math.random();
+
+                // Simulate typo (10% chance)
+                if (typoChance < 0.1 && /[a-zA-Z]/.test(char)) {
+                    const typoChar = String.fromCharCode(char.charCodeAt(0) + 1);
                     editor.edit(editBuilder => {
-                        console.log('Inserting Char:', chars[i]);  // Debug log
-                        editBuilder.insert(editor.selection.active, chars[i]);
+                        editBuilder.insert(editor.selection.active, typoChar);
+                    }).then(() => {
+                        setTimeout(() => {
+                            editor.edit(editBuilder => {
+                                const pos = editor.selection.active.translate(0, -1);
+                                editBuilder.delete(new vscode.Range(pos, editor.selection.active));
+                            }).then(() => {
+                                editor.edit(editBuilder => {
+                                    editBuilder.insert(editor.selection.active, char);
+                                });
+                                i++;
+                                setTimeout(typeChar, 50 + Math.random() * 100);
+                            });
+                        }, 100 + Math.random() * 100);
                     });
+                    return;
+                }
 
-                    i++;
-                }, 150);  // Ganti delay per huruf, bisa kamu ubah sesuka hati
-            }).catch(err => {
-                console.error('Error reading clipboard:', err);
-            });
-        }
+                editor.edit(editBuilder => {
+                    editBuilder.insert(editor.selection.active, char);
+                });
+
+                i++;
+
+                let delay = 40 + Math.random() * 100;
+                if (isSpace) delay += 200 + Math.random() * 200;
+                if (isNewline) delay += 600 + Math.random() * 400;
+                if (isEndOfSentence) delay += 300 + Math.random() * 200;
+
+                setTimeout(typeChar, delay);
+            }
+
+            typeChar();
+        });
     });
 
-    let cancelTypingDisposable = vscode.commands.registerCommand('extension.cancelTypingEffect', () => {
-        if (typingInterval) {
-            clearInterval(typingInterval);
-            console.log('Typing effect canceled!');
-        }
+    const cancelTypingDisposable = vscode.commands.registerCommand('extension.cancelTypingEffect', () => {
+        cancelTyping = true;
+        console.log('Typing effect canceled manually!');
     });
 
-    context.subscriptions.push(pasteWithTypingDisposable);
-    context.subscriptions.push(cancelTypingDisposable);
+    context.subscriptions.push(pasteWithTypingDisposable, cancelTypingDisposable);
 }
 
 function deactivate() {}
