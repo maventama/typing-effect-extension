@@ -10,7 +10,20 @@ function activate(context) {
         if (!editor) return;
 
         vscode.env.clipboard.readText().then(content => {
-            // Replace 4 spaces with actual tab before split
+            content = content.trim();
+            
+            if (content.startsWith("```")) {
+                const firstNewline = content.indexOf('\n');
+                if (firstNewline !== -1) {
+                    content = content.substring(firstNewline + 1);
+                }
+            }
+            
+            if (content.endsWith("```")) {
+                const lastBacktickIndex = content.lastIndexOf("```");
+                content = content.substring(0, lastBacktickIndex).trimEnd();
+            }
+            
             content = content.replace(/ {4}/g, '\t');
 
             const chars = content.split('');

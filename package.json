@@ -1,8 +1,8 @@
 {
     "name": "typing-effect-extension",
-    "displayName": "typing-effect-extension",
-    "description": "Paste text with a typing effect, one character at a time.",
-    "version": "1.1.0",
+    "displayName": "Paste with Typing Effect",
+    "description": "A Visual Studio Code extension that allows you to paste text with a typing effect, one character at a time.",
+    "version": "1.2.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/maventama/typing-effect-extension.git"

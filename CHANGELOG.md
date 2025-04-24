@@ -4,6 +4,9 @@ All notable changes to the "typing-effect-extension" extension will be documente
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
+## 1.2.0
 
-- Initial release
+### Added
+- Create new icon for the extension.
+- Remove backtick from the front of the text and backtick from the end of the text.
+- Add typo natural effect.
